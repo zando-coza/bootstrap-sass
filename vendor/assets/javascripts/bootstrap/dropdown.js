@@ -49,7 +49,7 @@
         .trigger('shown.bs.dropdown', relatedTarget)
     }
 
-    return false
+    return isActive
   }
 
   Dropdown.prototype.keydown = function (e) {
