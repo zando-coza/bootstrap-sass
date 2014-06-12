@@ -49,7 +49,12 @@
         .trigger('shown.bs.dropdown', relatedTarget)
     }
 
-    return isActive
+      if($('html').hasClass('touch')) {
+          if ($(window).width() >= 992) {
+              return isActive
+          }
+      }
+      return true
   }
 
   Dropdown.prototype.keydown = function (e) {
