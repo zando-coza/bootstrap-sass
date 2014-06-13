@@ -29,14 +29,17 @@
     var $parent  = getParent($this)
     var isActive = $parent.hasClass('open')
 
+    var isHeaderDropdown = ($this.data('dropdown-behaviour') == 'header')
+
     clearMenus()
 
     if (!isActive) {
-      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
-        // if mobile we use a backdrop because click events don't delegate
-        $('<div class="dropdown-backdrop"/>').insertAfter($(this)).on('click', clearMenus)
+      if(!isHeaderDropdown) {
+        if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+          // if mobile we use a backdrop because click events don't delegate
+          $('<div class="dropdown-backdrop"/>').insertAfter($(this)).on('click', clearMenus)
+        }
       }
-
       var relatedTarget = { relatedTarget: this }
       $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
 
@@ -45,16 +48,22 @@
       $this.trigger('focus')
 
       $parent
-        .toggleClass('open')
-        .trigger('shown.bs.dropdown', relatedTarget)
+          .toggleClass('open')
+          .trigger('shown.bs.dropdown', relatedTarget)
     }
 
-      if($('html').hasClass('touch')) {
-          if ($(window).width() >= 992) {
-              return isActive
-          }
+    if (isHeaderDropdown) {
+      if ($('html').hasClass('touch')) {
+        if ($(window).width() >= 992) {
+          return isActive
+        }
       }
+
       return true
+    } else {
+      return false
+    }
+
   }
 
   Dropdown.prototype.keydown = function (e) {
@@ -148,9 +157,9 @@
   // ===================================
 
   $(document)
-    .on('click.bs.dropdown.data-api', clearMenus)
-    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
-    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
-    .on('keydown.bs.dropdown.data-api', toggle + ', [role="menu"], [role="listbox"]', Dropdown.prototype.keydown)
+      .on('click.bs.dropdown.data-api', clearMenus)
+      .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+      .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+      .on('keydown.bs.dropdown.data-api', toggle + ', [role="menu"], [role="listbox"]', Dropdown.prototype.keydown)
 
 }(jQuery);
